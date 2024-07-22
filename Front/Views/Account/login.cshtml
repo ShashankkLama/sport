@@ -1,0 +1,42 @@
+﻿@model BlogApplication.DataAccess.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Login</h2>
+            <!-- Display error message -->
+            @if (ViewData.ModelState.ContainsKey("Email") || ViewData.ModelState.ContainsKey("Password"))
+            {
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        @foreach (var key in ViewData.ModelState.Keys)
+                        {
+                            foreach (var errorMessage in ViewData.ModelState[key].Errors)
+                            {
+                                <li>@errorMessage.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+            <!-- Login Form -->
+            <form asp-action="Login" asp-controller="Account" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="Email" value="@Model.Email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a href="@Url.Action("Register", "Account")" class="btn btn-link">Register</a>
+            </form>
+        </div>
+    </div>
+</div>

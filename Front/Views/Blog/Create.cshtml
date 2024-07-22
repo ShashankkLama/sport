@@ -1,0 +1,32 @@
+﻿@model BlogApplication.Models.Blog
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_DashboardLayout";
+}
+
+<h2>Create Blog</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" required>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Body" class="form-label"></label>
+        <textarea asp-for="Body" class="form-control" rows="5" required></textarea>
+        <span asp-validation-for="Body" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="PublishedDate" class="form-label"></label>
+        <input asp-for="PublishedDate" class="form-control" type="datetime-local" required>
+        <span asp-validation-for="PublishedDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="PictureColumn" class="form-label"></label>
+        <input type="file" id="pictureColumn" name="PictureColumn" class="form-control" accept="image/*" required>
+        <span asp-validation-for="PictureColumn" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

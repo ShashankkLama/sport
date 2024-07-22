@@ -1,0 +1,94 @@
+﻿@model BlogApplication.Models.User
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_DashboardLayout";
+}
+
+<!-- Page Content -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Register</h2>
+            <!-- Registration Form -->
+            <form asp-action="Register" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="Email" value="@Model.Email" required>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="Password" required>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="Username" value="@Model.Username" required>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="fullname" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullname" name="FullName" value="@Model.FullName" required>
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select class="form-select" id="role" name="Role" required>
+                        <option value="">Select Role</option>
+                        <option value="user">User</option>
+                       @*  <option value="admin">Admin</option> *@
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+
+            <!-- Display success message -->
+            @if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+            {
+                <div class="alert alert-success mt-3" role="alert">
+                    @Html.Raw(TempData["SuccessMessage"])
+                </div>
+            }
+
+            <!-- Display error message -->
+            @if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+            {
+                <div class="alert alert-danger mt-3" role="alert">
+                    @Html.Raw(TempData["ErrorMessage"])
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    // Display success message
+    @if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+    {
+        <text>
+            document.addEventListener("DOMContentLoaded", function () {
+                var successAlert = document.createElement("div");
+                successAlert.classList.add("alert", "alert-success", "mt-3");
+                successAlert.setAttribute("role", "alert");
+                successAlert.textContent = "@Html.Raw(TempData["SuccessMessage"])";
+                document.querySelector(".container").appendChild(successAlert);
+            });
+        </text>
+    }
+
+        // Display error message
+    @if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+    {
+        <text>
+            document.addEventListener("DOMContentLoaded", function () {
+                var errorAlert = document.createElement("div");
+                errorAlert.classList.add("alert", "alert-danger", "mt-3");
+                errorAlert.setAttribute("role", "alert");
+                errorAlert.textContent = "@Html.Raw(TempData["ErrorMessage"])";
+                document.querySelector(".container").appendChild(errorAlert);
+            });
+        </text>
+    }
+</script>

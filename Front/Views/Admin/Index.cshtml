@@ -1,0 +1,166 @@
+﻿@model BlogApplication.Models.AdminDashboardModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_DashboardLayout";
+}
+
+@{
+    // Fetch total counts for all blog posts
+    var totalStatsQuery = "SELECT COUNT(*) AS Total_Blog_Posts, SUM(UpvoteCount) AS Total_Upvotes, SUM(DownvoteCount) AS Total_Downvotes, SUM(CommentCount) AS Total_Comments FROM [blogdb].[dbo].[Blogs];";
+
+    // Fetch total counts for blog posts in May 2024
+    var monthlyStatsQuery = "SELECT COUNT(*) AS Total_Blog_Posts, SUM(UpvoteCount) AS Total_Upvotes, SUM(DownvoteCount) AS Total_Downvotes, SUM(CommentCount) AS Total_Comments FROM [blogdb].[dbo].[Blogs] WHERE YEAR(PublishedDate) = 2024 AND MONTH(PublishedDate) = 5;";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Custom styles -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #00B3A1;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        body {
+            background-color: #fbfbfb;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 20px;
+            padding: 58px 0 0; /* Height of navbar */
+            box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+            width: 240px;
+            z-index: 600;
+        }
+
+            .sidebar .active {
+                border-radius: 5px;
+                box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+            }
+
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: 0.5rem;
+            overflow-x: hidden;
+            overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        }
+    </style>
+</head>
+<body>
+    <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+        <div class="position-sticky">
+            <div class="list-group list-group-flush mx-3 mt-4">
+                <a href="#" class="list-group-item list-group-item-action py-2 ripple active">
+                    <i class="fas fa-chart-area fa-fw me-3"></i><span>Admin Panel</span>
+                </a>
+                <a href="@Url.Action("Create", "Admin")" class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-lock fa-fw me-3"></i><span>Create Admin</span>
+                </a>
+                <a href="@Url.Action("Index", "Home")" class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-users fa-fw me-3"></i><span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h3 class="card-title">All-Time Stats</h3>
+                            </div>
+                            <div class="card-body">
+                                <p>Total Blog Posts: <strong>@Model.TotalCounts.TotalBlogPosts</strong></p>
+                                <p>Total Upvotes: <strong>@Model.TotalCounts.TotalUpvotes</strong></p>
+                                <p>Total Downvotes: <strong>@Model.TotalCounts.TotalDownvotes</strong></p>
+                                <p>Total Comments: <strong>@Model.TotalCounts.TotalComments</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h3 class="card-title">Monthly Stats (May 2024)</h3>
+                            </div>
+                            <div class="card-body">
+                                <p>Total Blog Posts: <strong>@Model.MonthlyStats.TotalBlogPosts</strong></p>
+                                <p>Total Upvotes: <strong>@Model.MonthlyStats.TotalUpvotes</strong></p>
+                                <p>Total Downvotes: <strong>@Model.MonthlyStats.TotalDownvotes</strong></p>
+                                <p>Total Comments: <strong>@Model.MonthlyStats.TotalComments</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h3 class="card-title">Top 10 Bloggers</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <!-- Display top 10 bloggers here -->
+                                </ul>
+                                <a href="@Url.Action("TopBloggers", "Admin")" class="btn btn-primary mt-3">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h3 class="card-title">Top 10 Blog Posts</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <!-- Display top 10 blog posts here -->
+                                </ul>
+                                <a href="@Url.Action("TopPosts", "Admin")" class="btn btn-primary mt-3">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
